@@ -135,6 +135,11 @@ class AirflowMesosScheduler(mesos.interface.Scheduler):
                 command = mesos_pb2.CommandInfo()
                 command.shell = True
                 command.value = cmd
+
+                env = cmd.environment.variables.add()
+                env.name = "PORT"
+                env.value = str(port)
+
                 task.command.MergeFrom(command)
 
                 tasks.append(task)
