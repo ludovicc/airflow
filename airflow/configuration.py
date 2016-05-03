@@ -372,6 +372,10 @@ authenticate = False
 # default_principal = admin
 # default_secret = admin
 
+[mesos_env]
+
+# Additional environment variables to pass to tasks launched on Mesos
+
 """
 
 TEST_CONFIG = """\

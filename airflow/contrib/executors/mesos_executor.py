@@ -47,6 +47,10 @@ class AirflowMesosScheduler(mesos.interface.Scheduler):
         self.task_mem = task_mem
         self.task_counter = 0
         self.task_key_map = {}
+        self.task_env = {}
+        conf = configuration.as_dict()
+        if 'mesos.env' in conf.keys():
+            self.task_env = conf['mesos_env']
 
     def registered(self, driver, frameworkId, masterInfo):
         logging.info("AirflowScheduler registered to mesos with framework ID %s", frameworkId.value)
@@ -136,9 +140,10 @@ class AirflowMesosScheduler(mesos.interface.Scheduler):
                 command.shell = True
                 command.value = cmd
 
-                env = cmd.environment.variables.add()
-                env.name = "PORT"
-                env.value = str(port)
+                for name, value in self.task_env:
+                    env = cmd.environment.variables.add()
+                    env.name = name
+                    env.value = str(value)
 
                 task.command.MergeFrom(command)
 
