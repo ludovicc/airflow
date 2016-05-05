@@ -142,10 +142,12 @@ class AirflowMesosScheduler(mesos.interface.Scheduler):
 
                 for name, value in self.task_env:
                     env = cmd.environment.variables.add()
-                    env.name = name
+                    env.name = name.upper()
                     env.value = str(value)
 
                 task.command.MergeFrom(command)
+
+                logging.info("Task %d command: %s", tid, task.command)
 
                 tasks.append(task)
 
